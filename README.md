@@ -11,7 +11,7 @@ gptel-acp/
   test/gptel-acp-test.el
 ```
 
-`gptel-acp.el` 放在根目录。把这个目录加进 `load-path` 之后，`(require 'gptel-acp)` 就能找到它。
+`gptel-acp.el` 放在仓库根目录。用 straight 从 Git 克隆之后，Emacs 会加载它。
 
 ## 依赖
 
@@ -22,12 +22,11 @@ gptel-acp/
 
 ## 安装
 
-在 gptel 之后加载。这份 straight.el 没有 `:type nil` 的版本库后端，所以用 `:load-path`，不用 straight recipe。
+在 gptel 之后，用 straight 从 GitHub 克隆并加载：
 
 ```elisp
 (use-package gptel-acp
-  :straight nil
-  :load-path "/Users/dragon/src/local/gptel-acp"
+  :straight (gptel-acp :type git :host github :repo "Dragonshock/gptel-acp")
   :after gptel
   :init
   (setq gptel-acp-reasoning-effort "high")
@@ -88,12 +87,12 @@ Elisp 工具和 mcp.el 不放进 `session/new` 的 `mcpServers`。ACP 上不由 
 
 ## 测试
 
-不加载 Emacs 的 init。`load-path` 只加上 gptel 检出、本目录，以及 `acp.el` 所在目录：
+不加载 Emacs 的 init，也不启动 straight。在克隆下来的仓库里，把 gptel、本仓库和 `acp.el` 所在目录加进 `load-path` 再跑 ERT：
 
 ```bash
-/etc/profiles/per-user/dragon/bin/emacs -Q --batch \
-  --eval '(setq load-path (append (list "/Users/dragon/src/local/gptel/gptel" "/Users/dragon/src/local/gptel-acp" "/Users/dragon/.config/emacs/straight/build/acp") load-path))' \
-  -l /Users/dragon/src/local/gptel-acp/test/gptel-acp-test.el \
+emacs -Q --batch \
+  --eval '(setq load-path (append (list "/path/to/gptel" "/path/to/gptel-acp" "/path/to/acp") load-path))' \
+  -l test/gptel-acp-test.el \
   -f ert-run-tests-batch-and-exit
 ```
 
